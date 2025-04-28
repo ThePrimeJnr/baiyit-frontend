@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Camera, PhoneCall, SendHorizontal } from "lucide-react";
 import { FormEvent, useRef, useState } from "react";

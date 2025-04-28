@@ -1,89 +1,101 @@
-"use client"
-
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { Moon, Sun, Menu, X, ShoppingBag } from 'lucide-react'
-import { useTheme } from 'next-themes'
-import { Button } from '@/components/ui/button'
-import { useBag } from '@/contexts/bag-context'
-import BagDrawer from '@/components/shop/bag-drawer'
+import BagDrawer from "@/components/shop/bag-drawer";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { useBag } from "@/contexts/bag-context";
+import { AnimatePresence, motion } from "framer-motion";
+import { User, ShoppingBag } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
-  const pathname = usePathname()
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const { totalItems, setIsOpen } = useBag()
-  
+  const { totalItems, setIsOpen } = useBag();
+  const [scrolled, setScrolled] = useState(false);
+  const [currentText, setCurrentText] = useState(0);
+  const router = useRouter();
+
+  // Mock user data - replace with actual auth data
+  const isLoggedIn = false;
+  const user = {
+    name: "Destiny",
+    image:
+      "https://theprimejnr.com/_next/image?url=%2Fimages%2Fdestiny-saturday.png&w=96&q=75", // Replace with actual image path
+  };
+
+  const texts = [
+    "Baiyit: The Fully AI-Powered Store 🤖",
+    "Experience AI-Driven Shopping Revolution 🚀",
+    "100% AI-Powered Storefront Experience ✨",
+    "The Store That Thinks For You 🧠",
+    "AI That Perfectly Predicts Your Needs 🎯",
+    "Beyond Assistance: AI Runs This Store 💯",
+    "First True AI Shopping Ecosystem 🛍️",
+    "Where AI Powers Everything, Perfectly 💎",
+    "The Store That Learns & Evolves With You 🌱",
+    "AI-First Shopping: Redefined by Baiyit 🔮",
+  ];
+
   useEffect(() => {
-    setMounted(true)
-    
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10)
-    }
-    
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-  
-  const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/concierge', label: 'Concierge' },
-    { href: '/showroom', label: 'Showroom' },
-    { href: '/acquisitions', label: 'Acquisitions' },
-    { href: '/sessions', label: 'Sessions' },
-    { href: '/hub', label: 'Hub' },
-  ]
-  
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentText((prev) => (prev + 1) % texts.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [texts.length]);
+
+  const handleProfileClick = () => {
+    router.push(isLoggedIn ? "/profile" : "/login");
+  };
+
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-background/80 backdrop-blur-md shadow-sm' : 'bg-transparent'
-      }`}>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "bg-background/0 backdrop-blur-md shadow-sm"
+            : "bg-transparent"
+        }`}
+      >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center">
-              <span className="text-xl md:text-2xl font-bold text-primary">Baiyit</span>
+              <span className="text-xl md:text-2xl font-bold text-primary">
+                Baiyit
+              </span>
             </Link>
-            
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-1">
-              {navLinks.map((link) => (
-                <Link 
-                  key={link.href} 
-                  href={link.href}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
-                    pathname === link.href 
-                      ? 'text-primary font-medium' 
-                      : 'text-foreground/70 hover:text-foreground hover:bg-muted'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-            
-            {/* Right Side Actions */}
-            <div className="flex items-center space-x-4">
-              {/* Theme Toggle */}
-              {mounted && (
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  aria-label="Toggle theme"
-                >
-                  {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                </Button>
-              )}
-              
+
+            <div className="hidden md:flex items-center justify-center flex-1">
+              <div className="relative">
+                <div className="px-6 py-2 rounded-lg bg-secondary/20 backdrop-blur-md shadow-sm border text-sm font-medium text-foreground">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentText}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      {texts[currentText]}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Side */}
+            <div className="flex items-center space-x-2">
               {/* Bag Button */}
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="subtle"
                 size="icon"
                 onClick={() => setIsOpen(true)}
                 className="relative"
@@ -96,51 +108,40 @@ export default function Navbar() {
                   </span>
                 )}
               </Button>
-              
-              {/* Mobile Menu Toggle */}
-              <Button 
-                variant="ghost" 
-                size="icon"
-                className="md:hidden"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-              >
-                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </Button>
+                {/* Profile/Login */}
+                {isLoggedIn ? (
+                <Button
+                  variant="subtle"
+                  size="lg"
+                  onClick={handleProfileClick}
+                  className="px-2 md:py-6 flex items-center gap-1.5"
+                  aria-label="Profile"
+                >
+                  <Avatar className="h-8 w-8">
+                  <AvatarImage src={user.image} alt={user.name} />
+                  <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <span className="hidden sm:inline">{user.name}</span>
+                </Button>
+                ) : (
+                <Button
+                  variant="subtle"
+                  size="lg"
+                  onClick={handleProfileClick}
+                  className="px-2 md:py-6 flex items-center gap-1.5"
+                  aria-label="Login"
+                >
+                  <User className="h-4 w-4" />
+                  <span>Login</span>
+                </Button>
+                )}
             </div>
           </div>
         </div>
       </header>
-      
-      {/* Mobile Navigation Menu */}
-      {mobileMenuOpen && (
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="fixed inset-x-0 top-16 z-40 bg-background/95 backdrop-blur-md shadow-lg md:hidden"
-        >
-          <nav className="container mx-auto px-4 py-4 flex flex-col space-y-1">
-            {navLinks.map((link) => (
-              <Link 
-                key={link.href} 
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`px-4 py-3 rounded-lg ${
-                  pathname === link.href 
-                    ? 'bg-primary/10 text-primary font-medium' 
-                    : 'text-foreground/70 hover:text-foreground hover:bg-muted'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-        </motion.div>
-      )}
-      
+
       {/* Bag Drawer */}
       <BagDrawer />
     </>
-  )
+  );
 }

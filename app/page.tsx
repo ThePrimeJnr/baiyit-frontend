@@ -1,11 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Footer from "@/components/layout/footer";
+import Navbar from "@/components/layout/navbar";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ShoppingBag, MessageSquare, CreditCard } from "lucide-react";
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
+import { CreditCard, MessageSquare, ShoppingBag } from "lucide-react";
+import { useRouter } from "next/navigation";
+import ChatInput from "@/components/chat/chat-input";
 
 export default function Home() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/10">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.pexels.com/photos/5632402/pexels-photo-5632402.jpeg?auto=compress&cs=tinysrgb&h=1200')] bg-cover bg-center opacity-10" />
 
         <div className="container px-4 mx-auto relative z-10 text-center">
@@ -23,9 +24,9 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
+            className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary leading-tight"
           >
-            Meet Your AI Shopping Concierge
+            The World&apos;s First AI-Driven Store
           </motion.h1>
 
           <motion.p
@@ -34,8 +35,8 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-lg md:text-xl max-w-2xl mx-auto mb-10 text-foreground/80"
           >
-            Stop browsing endless catalogs. Simply ask, show, or upload what you
-            need, and Baiyit finds, compares, and purchases it for you.
+            No more endless scrolling. Just describe, show, or upload what you
+            want, and Baiyit gets just the best deal, instantly.
           </motion.p>
 
           <motion.div
@@ -43,56 +44,74 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <Button
-              size="lg"
-              className="glass-button text-lg px-8 py-6 rounded-full"
-              onClick={() => router.push("/concierge")}
-            >
-              Start Shopping
-            </Button>
+            <ChatInput />
           </motion.div>
         </div>
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 bg-background">
+      <section className="py-20 bg-gradient-to-b from-muted/60 to-muted/40">
         <div className="container px-4 mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
-            How It Works
-          </h2>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-3xl md:text-4xl font-bold text-center mb-16 text-primary"
+          >
+            How Baiyit Works
+          </motion.h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             {[
               {
-                icon: <MessageSquare className="h-12 w-12 text-secondary" />,
-                title: "Ask",
+                icon: <MessageSquare className="h-12 w-12 text-primary" />,
+                title: "Just Say It",
                 description:
-                  "Describe what you need in natural language. No filters or categories needed.",
+                  "Describe, show, or upload anything you want. No categories, no menus—just speak your mind.",
               },
               {
-                icon: <ShoppingBag className="h-12 w-12 text-secondary" />,
-                title: "See",
+                icon: <ShoppingBag className="h-12 w-12 text-primary" />,
+                title: "AI Finds It",
                 description:
-                  "Get personalized recommendations with all the details you need to decide.",
+                  "Baiyit instantly searches, compares, and curates the best options for you. Personalized, effortless, fast.",
               },
               {
-                icon: <CreditCard className="h-12 w-12 text-secondary" />,
-                title: "Buy",
+                icon: <CreditCard className="h-12 w-12 text-primary" />,
+                title: "You Own It",
                 description:
-                  "Choose your perfect match and complete your purchase in seconds.",
+                  "Buy, track, return, or ask anything about your order—Baiyit handles it all, start to finish.",
               },
             ].map((step, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: i * 0.2 }}
-                viewport={{ once: true }}
-                className="frosted-card p-8 text-center"
+                whileHover={{ y: -6, scale: 1.02 }}
+                className="group relative backdrop-blur-md bg-white/10 dark:bg-slate-800/20 rounded-2xl border border-white/20 dark:border-slate-700/40 shadow-lg p-8 text-center transition-all"
               >
-                <div className="flex justify-center mb-6">{step.icon}</div>
-                <h3 className="text-xl font-semibold mb-4">{step.title}</h3>
-                <p className="text-muted-foreground">{step.description}</p>
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                <div className="flex justify-center mb-6 bg-gradient-to-br from-primary/10 to-secondary/5 backdrop-blur-sm p-4 rounded-full mx-auto w-20 h-20 items-center shadow-inner relative z-10">
+                  <motion.div
+                    initial={{ scale: 0.8 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: 0.1 + i * 0.2 }}
+                    whileHover={{ rotate: 5 }}
+                  >
+                    {step.icon}
+                  </motion.div>
+                </div>
+
+                <h3 className="relative z-10 text-xl font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+                  {step.title}
+                </h3>
+                <p className="relative z-10 text-foreground/80">
+                  {step.description}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -100,7 +119,7 @@ export default function Home() {
       </section>
 
       {/* Demo Section */}
-      <section className="py-20 bg-muted/50">
+      <section className="py-20 bg-gradient-to-b from-muted/40 to-muted/20">
         <div className="container px-4 mx-auto">
           <div className="flex flex-col md:flex-row items-center gap-10">
             <motion.div
@@ -111,19 +130,19 @@ export default function Home() {
               className="flex-1"
             >
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                Experience the Future of Shopping
+                Experience Shopping, Reinvented
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Upload an image of what you want, ask for recommendations, or
-                just describe your needs. Watch as Baiyit finds exactly what
-                you&apos;re looking for, comparing options and highlighting the
-                best ones for you.
+                Forget endless scrolling. With Baiyit, you simply ask—and AI
+                delivers. Discover, buy, return, and manage everything in one
+                place. This is the future of shopping.
               </p>
               <Button
-                className="glass-button text-lg"
+                size="lg"
+                className="text-lg p-6 rounded-lg backdrop-blur-sm bg-primary/90 hover:bg-primary/80 shadow-lg transition-all duration-300"
                 onClick={() => router.push("/concierge")}
               >
-                Try the Demo
+                Shop with AI Now
               </Button>
             </motion.div>
 
@@ -134,8 +153,8 @@ export default function Home() {
               viewport={{ once: true }}
               className="flex-1"
             >
-              <div className="aspect-video glass-panel overflow-hidden rounded-2xl">
-                <div className="w-full h-full bg-[url('https://images.pexels.com/photos/5632398/pexels-photo-5632398.jpeg?auto=compress&cs=tinysrgb&h=800')] bg-cover bg-center"></div>
+              <div className="aspect-video overflow-hidden rounded-2xl backdrop-blur-md border border-white/20 dark:border-slate-700/30 shadow-xl">
+                <div className="w-full h-full bg-[url('https://images.pexels.com/photos/5632398/pexels-photo-5632398.jpeg?auto=compress&cs=tinysrgb&h=800')] bg-cover bg-center transform hover:scale-105 transition-transform duration-700"></div>
               </div>
             </motion.div>
           </div>

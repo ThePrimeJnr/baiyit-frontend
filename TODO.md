@@ -1,1 +1,4 @@
 - Migrate Brand Icons to simple Icons
+- Inspect color consistency across all pages
+- upload real demo video on landing page
+- update file structure
